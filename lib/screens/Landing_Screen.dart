@@ -56,8 +56,8 @@ class _State extends State<LandingPage> {
                           "There was some error",
                           style: TextStyle(
                             color: Colors.red,
-                            fontWeight: FontWeight.w200,
-                            fontSize: 20),
+                            fontWeight: FontWeight.w400,
+                            fontSize: 15),
                         )
                       : Container(),
                 ),
@@ -67,11 +67,12 @@ class _State extends State<LandingPage> {
                     child: RaisedButton(
                       textColor: Colors.white,
                       color: Colors.blue,
-                      child: Text('Display Balance'),
+                      child: Text('Check Balance'),
                       onPressed: () async {
                         _displayBalance();
                       },
-                    )),
+                    
+                      )),
               ],
             )));
   }
@@ -96,9 +97,9 @@ class _State extends State<LandingPage> {
     });
 
     // if success
+
     setState(() {
       _loading = false;
-      _error = false;
       _balance = _response;
     });
   }
