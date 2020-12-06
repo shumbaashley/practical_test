@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import './Account_Screen.dart';
+import 'package:grpc_app/src/client.dart';
+import 'package:grpc_app/protos/users.pb.dart';
+import 'package:grpc_app/protos/users.pbgrpc.dart';
+import 'dart:convert';
 
 class LandingPage extends StatefulWidget {
   @override
@@ -7,6 +10,10 @@ class LandingPage extends StatefulWidget {
 }
 
 class _State extends State<LandingPage> {
+  Future<User> _user;
+  String _username;
+  double _balance;
+  double _result;
 
   @override
   Widget build(BuildContext context) {
@@ -29,20 +36,33 @@ class _State extends State<LandingPage> {
                           fontSize: 30),
                     )),
                 Container(
+                  alignment: Alignment.center,
+                  padding: EdgeInsets.all(10),
+                  child: _balance != null ? Text(
+                    "You have \$$_balance.",
+                    // _balance,
+                    style: Theme.of(context).textTheme.headline4,
+                  ) : Container(), 
+                ),
+                Container(
                     height: 50,
-                    padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                    padding: EdgeInsets.all(10),
                     child: RaisedButton(
                       textColor: Colors.white,
                       color: Colors.blue,
-                      child: Text('Go to Account Page'),
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => AccountPage()));
+                      child: Text('Display Balance'),
+                      onPressed: () async {
+                        _result = await displayBalance();
+
+                        setState(() {
+                          _balance = _result;
+                        });
                       },
                     )),
               ],
             )));
   }
 }
+
+
+    // Center(child: _patientPhone != null ? Text('${_patientPhone}') : Container(),))
