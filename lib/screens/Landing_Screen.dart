@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:grpc_app/src/client.dart';
-import 'package:grpc_app/protos/users.pb.dart';
-import 'package:grpc_app/protos/users.pbgrpc.dart';
-import 'dart:convert';
+
 
 class LandingPage extends StatefulWidget {
   @override
@@ -11,8 +9,9 @@ class LandingPage extends StatefulWidget {
 
 class _State extends State<LandingPage> {
   double _balance;
-  double _result;
   bool _loading = false;
+  bool _error = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,18 +35,29 @@ class _State extends State<LandingPage> {
                 Container(
                   alignment: Alignment.center,
                   padding: EdgeInsets.all(10),
-                  child: _loading
-                      ? CircularProgressIndicator()
-                      : Container(),
+                  child: _loading ? CircularProgressIndicator() : Container(),
                 ),
                 Container(
                   alignment: Alignment.center,
                   padding: EdgeInsets.all(10),
                   child: _balance != null
                       ? Text(
-                          "You have \$$_balance.",
+                          "USD \$$_balance.",
                           // _balance,
                           style: Theme.of(context).textTheme.headline4,
+                        )
+                      : Container(),
+                ),
+                Container(
+                  alignment: Alignment.center,
+                  padding: EdgeInsets.all(10),
+                  child: _error ?
+                      Text(
+                          "There was some error",
+                          style: TextStyle(
+                            color: Colors.red,
+                            fontWeight: FontWeight.w200,
+                            fontSize: 20),
                         )
                       : Container(),
                 ),
@@ -59,17 +69,39 @@ class _State extends State<LandingPage> {
                       color: Colors.blue,
                       child: Text('Display Balance'),
                       onPressed: () async {
-                        setState(() {
-                          _loading = true;
-                        });
-                        _result = await displayBalance();
-                        setState(() {
-                          _loading = false;
-                          _balance = _result;
-                        });
+                        _displayBalance();
                       },
                     )),
               ],
             )));
   }
+
+  Future<void> _displayBalance() async {
+    // display Loader
+    setState(() {
+      _error = false;
+      _loading = true;
+      _balance = null;
+    });
+
+
+    // fetch balance
+    var _response = await getBalance().catchError((error) {
+      // if error
+      setState(() {
+        _loading = false;
+        _balance = null;
+        _error = true;
+      });
+    });
+
+    // if success
+    setState(() {
+      _loading = false;
+      _error = false;
+      _balance = _response;
+    });
+  }
+
 }
+

@@ -30,6 +30,7 @@ dependencies:
   cupertino_icons: ^1.0.0
   grpc: ^2.8.0
   protobuf: ^1.0.0
+  flutter_launcher_icons: ^0.8.1
 
 dev_dependencies:
   flutter_test:

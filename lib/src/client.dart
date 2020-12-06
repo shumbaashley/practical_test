@@ -3,7 +3,7 @@ import 'package:grpc_app/protos/users.pbgrpc.dart';
 import 'package:grpc/grpc.dart';
 
 // Fetch User Info Method
-Future<double> displayBalance() async {
+Future<double> getBalance() async {
   final channel = ClientChannel(
         "178.62.63.123",
         port: 50000,
@@ -22,6 +22,5 @@ Future<double> displayBalance() async {
 
   await channel.shutdown();
 
-  print(user.balance);
   return user.balance;
 }
