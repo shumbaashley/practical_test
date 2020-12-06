@@ -10,11 +10,9 @@ class LandingPage extends StatefulWidget {
 }
 
 class _State extends State<LandingPage> {
-  Future<User> _user;
-  String _username;
   double _balance;
   double _result;
-
+  bool _loading = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,11 +36,20 @@ class _State extends State<LandingPage> {
                 Container(
                   alignment: Alignment.center,
                   padding: EdgeInsets.all(10),
-                  child: _balance != null ? Text(
-                    "You have \$$_balance.",
-                    // _balance,
-                    style: Theme.of(context).textTheme.headline4,
-                  ) : Container(), 
+                  child: _loading
+                      ? CircularProgressIndicator()
+                      : Container(),
+                ),
+                Container(
+                  alignment: Alignment.center,
+                  padding: EdgeInsets.all(10),
+                  child: _balance != null
+                      ? Text(
+                          "You have \$$_balance.",
+                          // _balance,
+                          style: Theme.of(context).textTheme.headline4,
+                        )
+                      : Container(),
                 ),
                 Container(
                     height: 50,
@@ -52,9 +59,12 @@ class _State extends State<LandingPage> {
                       color: Colors.blue,
                       child: Text('Display Balance'),
                       onPressed: () async {
-                        _result = await displayBalance();
-
                         setState(() {
+                          _loading = true;
+                        });
+                        _result = await displayBalance();
+                        setState(() {
+                          _loading = false;
                           _balance = _result;
                         });
                       },
@@ -63,6 +73,3 @@ class _State extends State<LandingPage> {
             )));
   }
 }
-
-
-    // Center(child: _patientPhone != null ? Text('${_patientPhone}') : Container(),))
